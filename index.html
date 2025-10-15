@@ -1,191 +1,78 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
   <title>Appointment Calendar</title>
   <style>
-    :root{
-      --accent:#2b6cb0;
-      --muted:#666;
-      --bg:#f7fafc;
-      --card:#fff;
-      --shadow: 0 6px 18px rgba(15,23,42,0.08);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      padding: 50px; 
+      background-color: #f4f4f4;
     }
-    body{margin:0;background:var(--bg);color:#0f172a;}
-    header{padding:18px 20px;background:linear-gradient(90deg,#ffffff, #f1f5f9);box-shadow:var(--shadow);display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-    h1{font-size:20px;margin:0}
-    .toolbar{display:flex;gap:8px;align-items:center;margin-left:auto}
-    .btn{
-      background:var(--card);border:1px solid #e6edf3;padding:8px 12px;border-radius:10px;cursor:pointer;
-      box-shadow:none;font-weight:600;color:#0f172a;
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
     }
-    .btn.ghost{background:transparent;border:1px solid transparent;color:var(--muted);font-weight:600}
-    .btn.primary{background:var(--accent);color:#fff;border:0;box-shadow:0 6px 18px rgba(43,108,176,0.18)}
-    .segmented{display:flex;border-radius:10px;overflow:hidden;border:1px solid #e6edf3;background:var(--card)}
-    .segmented button{padding:8px 12px;border:0;background:transparent;cursor:pointer;font-weight:600}
-    .segmented button.active{background:#edf6ff;color:var(--accent)}
-    .controls{display:flex;gap:10px;align-items:center;margin-left:12px}
-    main{padding:18px;}
-    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow);min-height:60vh}
-    .iframe-wrap{height:75vh;border-radius:8px;overflow:hidden;border:1px solid #e6edf3}
-    iframe{border:0;width:100%;height:100%}
-    .meta{margin-top:10px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:14px}
-    .small{font-size:13px;color:var(--muted)}
-    @media (max-width:720px){
-      header{padding:12px}
-      .toolbar{width:100%;margin-top:8px;justify-content:flex-start}
+    a.button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px auto;
+      padding: 15px 30px;
+      width: 280px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+    a.button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+    .google { background-color: #4285F4; }
+    .google:hover { background-color: #357AE8; }
+    .apple { background-color: #A2AAAD; }
+    .apple:hover { background-color: #8B8F93; }
+    .icon { font-size: 22px; }
   </style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>Appointment Calendar</h1>
 
-    <div class="toolbar" role="toolbar" aria-label="Calendar controls">
-      <div class="controls" aria-hidden="false">
-        <button id="prevBtn" class="btn" title="Previous">◀ Prev</button>
-        <button id="todayBtn" class="btn" title="Today">Today</button>
-        <button id="nextBtn" class="btn" title="Next">Next ▶</button>
-      </div>
+  <h1>📅 Appointment Calendar</h1>
 
-      <div class="segmented" role="tablist" aria-label="View mode">
-        <button id="monthView" class="active" data-mode="MONTH" role="tab" aria-selected="true">Month</button>
-        <button id="weekView" data-mode="WEEK" role="tab" aria-selected="false">Week</button>
-        <button id="agendaView" data-mode="AGENDA" role="tab" aria-selected="false">Agenda</button>
-      </div>
+  <div id="calendar-buttons">
+    <!-- Replace with your fellows’ Google Calendar ID below -->
+    <a href="https://calendar.google.com/calendar/u/0/r?cid=https://calendar.google.com/calendar/ical/stephenrcoveyleadershipcenter%40gmail.com/public/basic.ics@group.calendar.google.com" class="button google">
+      <i class="fab fa-google icon"></i> Add to Google Calendar
+    </a>
 
-      <div class="controls">
-        <button id="subscribeBtn" class="btn ghost" title="Subscribe (ICS)">Subscribe</button>
-        <button id="addBtn" class="btn ghost" title="Add to Google Calendar">Add Event</button>
-        <button id="openBtn" class="btn primary" title="Open in Google Calendar">Open in Google Calendar</button>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <div class="card">
-      <div class="iframe-wrap" id="iframeWrap" aria-live="polite">
-        <iframe id="gcalFrame" src="" style="min-height:500px" title="Fellows Appointment Calendar"></iframe>
-      </div>
-
-      <div class="meta">
-        <div id="currentRange" class="small">Loading calendar view…</div>
-        <div class="small">• Use the controls to switch view or navigate dates</div>
-      </div>
-    </div>
-  </main>
+    <a href="webcal://calendar.google.com/calendar/ical/https://calendar.google.com/calendar/ical/stephenrcoveyleadershipcenter%40gmail.com/public/basic.ics@group.calendar.google.com/public/basic.ics" class="button apple">
+      <i class="fab fa-apple icon"></i> Add to Apple Calendar
+    </a>
+  </div>
 
   <script>
-    const calendarId = "YOUR_CALENDAR_ID_HERE"; // <-- REPLACE THIS
-    const timeZone = "America/Denver";
+    function detectDevice() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const calendarButtons = document.getElementById('calendar-buttons');
 
-    function formatDate(d){
-      return d.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
-    }
-
-    let centerDate = new Date();
-    let mode = 'MONTH';
-
-    function buildEmbedUrl(){
-      const base = "https://calendar.google.com/calendar/embed";
-      const modeParam = "mode=" + encodeURIComponent(mode);
-      const tzParam = "ctz=" + encodeURIComponent(timeZone);
-      const srcParam = "src=" + encodeURIComponent(calendarId);
-      const extras = ["showTitle=0","showPrint=0","showCalendars=0","showTz=0"].join("&");
-      const dateAnchor = centerDate.toISOString().slice(0,10).replace(/-/g,'');
-      const datesParam = "dates=" + dateAnchor;
-      return `${base}?${srcParam}&${modeParam}&${tzParam}&${extras}&${datesParam}`;
-    }
-
-    const iframe = document.getElementById('gcalFrame');
-    const currentRangeEl = document.getElementById('currentRange');
-
-    function refreshIframe(){
-      iframe.src = buildEmbedUrl();
-      updateRangeLabel();
-    }
-
-    function updateRangeLabel(){
-      if(mode === 'MONTH'){
-        const start = new Date(centerDate.getFullYear(), centerDate.getMonth(), 1);
-        const end = new Date(centerDate.getFullYear(), centerDate.getMonth()+1, 0);
-        currentRangeEl.textContent = `Showing: ${start.toLocaleString(undefined,{month:'short', year:'numeric'})} (${formatDate(start)} — ${formatDate(end)})`;
-      } else if(mode === 'WEEK'){
-        const d = new Date(centerDate);
-        const day = d.getDay();
-        const diffToMon = (day + 6) % 7;
-        const mon = new Date(d);
-        mon.setDate(d.getDate() - diffToMon);
-        const sun = new Date(mon);
-        sun.setDate(mon.getDate() + 6);
-        currentRangeEl.textContent = `Showing: Week of ${formatDate(mon)} — ${formatDate(sun)}`;
-      } else {
-        const s = new Date(centerDate); s.setDate(s.getDate() - 3);
-        const e = new Date(centerDate); e.setDate(e.getDate() + 3);
-        currentRangeEl.textContent = `Showing (agenda around): ${formatDate(s)} — ${formatDate(e)}`;
+      if (/android/i.test(userAgent)) {
+        const google = document.querySelector('.google');
+        calendarButtons.prepend(google);
+      } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        const apple = document.querySelector('.apple');
+        calendarButtons.prepend(apple);
       }
     }
-
-    document.getElementById('todayBtn').addEventListener('click', () => {
-      centerDate = new Date();
-      refreshIframe();
-    });
-
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      if(mode === 'MONTH'){ centerDate.setMonth(centerDate.getMonth() - 1); }
-      else if(mode === 'WEEK'){ centerDate.setDate(centerDate.getDate() - 7); }
-      else { centerDate.setDate(centerDate.getDate() - 7); }
-      refreshIframe();
-    });
-
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      if(mode === 'MONTH'){ centerDate.setMonth(centerDate.getMonth() + 1); }
-      else if(mode === 'WEEK'){ centerDate.setDate(centerDate.getDate() + 7); }
-      else { centerDate.setDate(centerDate.getDate() + 7); }
-      refreshIframe();
-    });
-
-    const viewButtons = document.querySelectorAll('.segmented button');
-    viewButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        viewButtons.forEach(b=>b.classList.remove('active'));
-        viewButtons.forEach(b=>b.setAttribute('aria-selected','false'));
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected','true');
-        mode = btn.dataset.mode;
-        refreshIframe();
-      });
-    });
-
-    document.getElementById('subscribeBtn').addEventListener('click', () => {
-      const icsUrl = `https://calendar.google.com/calendar/ical/${encodeURIComponent(calendarId)}/public/basic.ics`;
-      window.open(icsUrl, '_blank', 'noopener');
-    });
-
-    document.getElementById('addBtn').addEventListener('click', () => {
-      const createUrl = `https://calendar.google.com/calendar/u/0/r/eventedit`;
-      window.open(createUrl, '_blank', 'noopener');
-    });
-
-    document.getElementById('openBtn').addEventListener('click', () => {
-      const calendarUrl = `https://calendar.google.com/calendar/u/0/r?cid=${encodeURIComponent(calendarId)}`;
-      window.open(calendarUrl, '_blank', 'noopener');
-    });
-
-    refreshIframe();
-
-    window.addEventListener('keydown', (e) => {
-      if(e.key === "ArrowLeft"){ document.getElementById('prevBtn').click(); }
-      if(e.key === "ArrowRight"){ document.getElementById('nextBtn').click(); }
-      if(e.key === "t" || e.key === "T"){ document.getElementById('todayBtn').click(); }
-    });
-
-    if(calendarId.includes("YOUR_CALENDAR_ID_HERE")){
-      console.warn("Reminder: Replace 'YOUR_CALENDAR_ID_HERE' with your actual calendar's public ID in the HTML.");
-      currentRangeEl.textContent = "Reminder: Replace 'YOUR_CALENDAR_ID_HERE' with your calendar's public ID in the HTML to load your calendar.";
-    }
+    detectDevice();
   </script>
+
 </body>
 </html>
+
